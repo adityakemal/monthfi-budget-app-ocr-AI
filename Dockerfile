@@ -9,10 +9,8 @@ ENV HOSTNAME=0.0.0.0
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# copy hasil build saja
 COPY .next/standalone ./
 COPY .next/static ./.next/static
-COPY public ./public
 
 USER nextjs
 
