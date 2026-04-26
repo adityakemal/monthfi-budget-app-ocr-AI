@@ -1,1 +1,11 @@
-{}
+{
+  "/api/budget/route": "app/api/budget/route.js",
+  "/api/state/route": "app/api/state/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/transactions/[id]/route": "app/api/transactions/[id]/route.js",
+  "/api/transactions/route": "app/api/transactions/route.js",
+  "/api/categories/route": "app/api/categories/route.js",
+  "/login/page": "app/login/page.js",
+  "/transaction/page": "app/transaction/page.js",
+  "/page": "app/page.js"
+}

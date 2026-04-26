@@ -12,6 +12,7 @@ RUN adduser --system --uid 1001 nextjs
 # Create data directory and set permissions
 RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
 
+COPY --chown=nextjs:nodejs public ./public
 COPY --chown=nextjs:nodejs .next/standalone ./
 COPY --chown=nextjs:nodejs .next/static ./.next/static
 
