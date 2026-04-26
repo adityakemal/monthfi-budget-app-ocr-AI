@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  --font-doto: "Doto", "Space Mono", monospace;
+  --font-space-grotesk: "Space Grotesk", "DM Sans", system-ui, sans-serif;
+  --font-space-mono: "Space Mono", "JetBrains Mono", "SF Mono", monospace;
+  
+  --black: #0a0a0a;
+  --surface: #141414;
+  --surface-raised: #1c1c1c;
+  --border: #1e1e1e;
+  --border-visible: #2a2a2a;
+  --text-disabled: #555555;
+  --text-secondary: #888888;
+  --text-primary: #e0e0e0;
+  --text-display: #ffffff;
+  --accent: #d71921;
+  --success: #4a9e5c;
+  --warning: #d4a843;
+
+  --color-black: var(--black);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-border-visible: var(--border-visible);
+  --color-text-disabled: var(--text-disabled);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-display: var(--text-display);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+}
+
+.light {
+  --black: #f8f8f8;
+  --surface: #ffffff;
+  --surface-raised: #f2f2f2;
+  --border: #eeeeee;
+  --border-visible: #d0d0d0;
+  --text-disabled: #aaaaaa;
+  --text-secondary: #666666;
+  --text-primary: #1a1a1a;
+  --text-display: #000000;
+  --accent: #d71921;
+  --success: #4a9e5c;
+  --warning: #d4a843;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--text-primary);
+  font-family: var(--font-space-grotesk);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin: 0;
+}
+
+.font-display {
+  font-family: var(--font-doto);
+}
+
+.font-mono {
+  font-family: var(--font-space-mono);
+}
+
+input, select, textarea {
+  font-family: inherit;
+  color: var(--text-primary);
+  background-color: var(--black);
+  border: 1px solid var(--border-visible);
+  border-radius: 8px;
+  padding: 12px;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-disabled);
+  opacity: 1;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--text-secondary);
+}
+
+button {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-visible);
+  border-radius: 4px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
