@@ -1,8 +1,10 @@
 import { createClient } from '@libsql/client';
 import path from 'path';
 
-// Store DB in the root of the project
-const dbPath = path.join(process.cwd(), 'budget.db');
+// Store DB in the root of the project for dev, but in /app/data for production Docker
+const dbPath = process.env.NODE_ENV === 'production'
+  ? '/app/data/budget.db'
+  : path.join(process.cwd(), 'budget.db');
 
 const db = createClient({
   url: `file:${dbPath}`,

@@ -9,8 +9,11 @@ ENV HOSTNAME=0.0.0.0
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY .next/standalone ./
-COPY .next/static ./.next/static
+# Create data directory and set permissions
+RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
+
+COPY --chown=nextjs:nodejs .next/standalone ./
+COPY --chown=nextjs:nodejs .next/static ./.next/static
 
 USER nextjs
 
