@@ -148,11 +148,11 @@ export function TransactionForm() {
   return (
     <div className="flex flex-col gap-2">
       {/* Row 1: Name + Nominal */}
-      <div className="flex gap-2">
-        <div className="relative flex-1" ref={suggestionsRef}>
+      <div className="grid grid-cols-2 gap-2">
+        <div className="w-full" ref={suggestionsRef}>
           <input
             type="text"
-            placeholder="Nama item (misal: Popok)"
+            placeholder="Nama (ex: Popok)"
             value={name}
             onChange={handleNameChange}
             onKeyDown={handleKeyDown}
@@ -198,7 +198,7 @@ export function TransactionForm() {
           )}
         </div>
 
-        <div className="relative w-[40%] sm:w-[40%]">
+        <div className="relative w-full">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] font-medium text-[var(--text-disabled)] pointer-events-none">
             Rp
           </span>
@@ -222,9 +222,11 @@ export function TransactionForm() {
       </div>
 
       {/* Row 3: Category + Note */}
-      <div className="flex gap-2">
+      <div className="grid grid-cols-2 gap-2 relative">
+        {/* Date */}
+        <DayPicker date={date} onChange={setDate} className="w-full " />
         {/* Category Dropdown */}
-        <div className="relative flex-1" ref={dropdownRef}>
+        <div className="w-full" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -350,20 +352,17 @@ export function TransactionForm() {
             </div>
           )}
         </div>
-
-        {/* Date */}
-        <DayPicker date={date} onChange={setDate} className="flex-1 h-12" />
       </div>
 
       {/* Row 4: Submit + Note */}
-      <div className="flex gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <input
           type="text"
           placeholder="Catatan (opsional)"
           value={keterangan}
           onChange={(e) => setKeterangan(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="!w-[40%] h-12 px-3 text-[13px] rounded-lg"
+          className="w-full h-12 px-3 text-[13px] rounded-lg"
           style={{
             border: "1px solid var(--border-visible)",
             background: "var(--black)",
@@ -373,7 +372,7 @@ export function TransactionForm() {
         <button
           onClick={handleAddTransaction}
           disabled={!canSubmit}
-          className="flex-1 h-12 font-mono text-[13px] font-bold uppercase rounded-lg transition-opacity"
+          className="w-full h-12 font-mono text-[13px] font-bold uppercase rounded-lg transition-opacity"
           style={{
             background: canSubmit ? "var(--accent)" : "var(--border)",
             color: canSubmit ? "white" : "var(--text-disabled)",
@@ -381,7 +380,7 @@ export function TransactionForm() {
             cursor: canSubmit ? "pointer" : "default",
           }}
         >
-          Tambah Transaksi
+          Tambah
         </button>
       </div>
     </div>

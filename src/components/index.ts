@@ -6,3 +6,4 @@ export { BudgetCard } from './BudgetCard';
 export { BottomNav } from './BottomNav';
 export { StoreInit } from './StoreInit';
 export { DataActions } from './DataActions';
+export { AppHeader } from './AppHeader';

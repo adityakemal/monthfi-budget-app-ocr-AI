@@ -25,7 +25,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MonthFi — Budget Tracker",
+  title: "sesaKu — Budget Tracker",
   description: "Kelola pengeluaran bulanan dengan mudah",
 };
 
@@ -43,10 +43,12 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${doto.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}
+        className={`${doto.variable} ${spaceGrotesk.variable} ${spaceMono.variable} bg-[var(--black)]`}
       >
         <StoreInit />
-        {children}
+        <div className="max-w-4xl mx-auto min-h-screen relative flex flex-col bg-[var(--black)] shadow-2xl">
+          {children}
+        </div>
       </body>
     </html>
   );

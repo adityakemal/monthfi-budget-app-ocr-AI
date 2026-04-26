@@ -37,7 +37,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-4"
+      className="flex-1 flex items-center justify-center p-4"
       style={{ background: "var(--black)", color: "var(--text-primary)" }}
     >
       <div
@@ -52,7 +52,7 @@ export default function LoginPage() {
             className="text-4xl font-bold font-display"
             style={{ color: "var(--text-display)" }}
           >
-            MonthFi
+            sesaKu
           </h1>
           <p className="text-[14px]" style={{ color: "var(--text-secondary)" }}>
             Kelola pengeluaranmu dengan cerdas.
@@ -129,7 +129,7 @@ export default function LoginPage() {
 
         <div className="pt-4 text-center">
           <p className="text-[11px]" style={{ color: "var(--text-disabled)" }}>
-            © 2024 MonthFi. All rights reserved.
+            © 2026 sesaKu. All rights reserved.
           </p>
         </div>
       </div>

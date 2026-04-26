@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import type { Transaction } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const txRes = await db.execute('SELECT * FROM transactions ORDER BY date DESC');

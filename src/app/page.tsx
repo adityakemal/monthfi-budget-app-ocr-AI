@@ -8,6 +8,7 @@ import {
   SavingsChart,
   MonthPicker,
   BottomNav,
+  AppHeader,
 } from "@/components";
 import { useTheme } from "@/hooks/useTheme";
 import { useBudgetStore } from "@/store/budget";
@@ -104,81 +105,47 @@ export default function Home() {
   }
 
   return (
-    <div
-      className="min-h-screen pb-20"
-      style={{ background: "var(--black)", color: "var(--text-primary)" }}
-    >
-      <div className="max-w-4xl mx-auto px-4 py-5 space-y-4">
-        {/* Header */}
-        <header className="flex justify-between items-center">
-          <h1
-            className="font-display text-4xl font-bold"
-            style={{ color: "var(--text-display)" }}
-          >
-            MonthFi
-          </h1>
-          <div className="flex items-center gap-2">
-            <MonthPicker
-              selectedDate={selectedDate}
-              onChange={setSelectedDate}
-            />
-            <button
-              onClick={toggle}
-              className="w-9 h-9 flex items-center justify-center rounded-lg"
+    <main className="flex-1 pb-20 px-4 py-5 space-y-4 text-[var(--text-primary)]">
+      {/* Header */}
+      <AppHeader
+        title="sesaKu"
+        selectedDate={selectedDate}
+        onMonthChange={setSelectedDate}
+      />
+
+      {/* Budget Overview */}
+      <div className="p-4 rounded-xl " style={{ background: "var(--surface)" }}>
+        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+          <div className="">
+            <p
+              className="text-[12px] font-medium mb-0.5"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Sisa Budget
+            </p>
+            <p
+              className="text-2xl md:text-4xl font-bold font-display leading-none whitespace-nowrap"
               style={{
-                border: "1px solid var(--border-visible)",
-                color: "var(--text-secondary)",
-                background: "transparent",
+                color: remaining < 0 ? "var(--accent)" : "var(--text-display)",
               }}
             >
-              {darkMode ? "☀" : "☾"}
-            </button>
+              {formatCurrency(remaining)}
+            </p>
           </div>
-        </header>
-
-        {/* Budget Overview */}
-        <div
-          className="p-4 rounded-xl"
-          style={{ background: "var(--surface)" }}
-        >
-          <div className="flex justify-between items-start mb-3">
-            <div>
-              <p
-                className="text-[12px] font-medium mb-0.5"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Sisa Budget
-              </p>
-              <p
-                className="text-[28px] font-bold font-display leading-none"
-                style={{
-                  color:
-                    remaining < 0 ? "var(--accent)" : "var(--text-display)",
-                }}
-              >
-                {formatCurrency(remaining)}
-              </p>
-            </div>
-            <div className="text-right">
-              <p
-                className="text-[12px]"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {formatCurrency(totalSpent)} / {formatCurrency(budget)}
-              </p>
-              <p
-                className="text-[14px] font-mono font-bold"
-                style={{ color: getStatusColor(progress) }}
-              >
-                {progress > 100 ? "Over " : ""}
-                {Math.min(progress, 999).toFixed(0)}%
-              </p>
-            </div>
+          <div className=" sm:justify-end justify-start">
+            <p
+              className="text-[12px] whitespace-nowrap"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {formatCurrency(totalSpent)} / {formatCurrency(budget)}
+            </p>
           </div>
+        </div>
 
-          {/* Progress bar */}
+        {/* Progress bar */}
+        <div className="flex gap-2 items-center">
           <div
-            className="h-2 rounded-full overflow-hidden"
+            className="h-2 w-full rounded-full overflow-hidden"
             style={{ background: "var(--border)" }}
           >
             <div
@@ -189,100 +156,104 @@ export default function Home() {
               }}
             />
           </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-2">
-          <StatCard label="Transaksi" value={String(transactionCount)} />
-          <StatCard
-            label="Rata-rata/hari"
-            value={formatCurrency(dailyAvg)}
-            small
-          />
-          <StatCard
-            label="Proyeksi"
-            value={formatCurrency(projectedSpend)}
-            small
-            alert={budget > 0 && projectedSpend > budget}
-          />
-        </div>
-
-        {/* Top Category */}
-        {topCategory && (
-          <div
-            className="p-4 rounded-xl flex items-center justify-between"
-            style={{ background: "var(--surface)" }}
-          >
-            <div>
-              <p
-                className="text-[12px] mb-0.5"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Pengeluaran terbesar
-              </p>
-              <p
-                className="text-[16px] font-semibold"
-                style={{ color: "var(--text-display)" }}
-              >
-                {topCategory[0]}
-              </p>
-            </div>
-            <p
-              className="text-[16px] font-mono font-bold"
-              style={{ color: "var(--accent)" }}
-            >
-              {formatCurrency(topCategory[1])}
-            </p>
-          </div>
-        )}
-
-        {/* Charts */}
-        {filteredTransactions.length > 0 && (
-          <>
-            <div
-              className="p-4 rounded-xl"
-              style={{ background: "var(--surface)" }}
-            >
-              <p
-                className="text-[13px] font-medium mb-3"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Kategori
-              </p>
-              <CategoryChart
-                transactions={filteredTransactions}
-                categories={categories}
-              />
-            </div>
-
-            <div
-              className="p-4 rounded-xl"
-              style={{ background: "var(--surface)" }}
-            >
-              <WeeklyChart
-                transactions={filteredTransactions}
-                selectedMonth={selectedDate}
-              />
-            </div>
-          </>
-        )}
-
-        {/* Savings Trend */}
-        <div
-          className="p-4 rounded-xl"
-          style={{ background: "var(--surface)" }}
-        >
           <p
-            className="text-[13px] font-medium mb-3"
-            style={{ color: "var(--text-secondary)" }}
+            className="text-[14px] font-mono font-bold whitespace-nowrap"
+            style={{ color: getStatusColor(progress) }}
           >
-            Tren Sisa Budget
+            {progress > 100 ? "Over " : ""}
+            {Math.min(progress, 999).toFixed(0)}%
           </p>
-          <SavingsChart monthlyData={savingsData} />
         </div>
       </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-3 gap-2">
+        <StatCard label="Transaksi" value={String(transactionCount)} />
+        <StatCard
+          label="Rata-rata/hari"
+          value={formatCurrency(dailyAvg)}
+          small
+        />
+        <StatCard
+          label="Proyeksi"
+          value={formatCurrency(projectedSpend)}
+          small
+          alert={budget > 0 && projectedSpend > budget}
+        />
+      </div>
+
+      {/* Top Category */}
+      {topCategory && (
+        <div
+          className="p-4 rounded-xl flex items-center justify-between"
+          style={{ background: "var(--surface)" }}
+        >
+          <div>
+            <p
+              className="text-[12px] mb-0.5"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Pengeluaran terbesar
+            </p>
+            <p
+              className="text-[16px] font-semibold"
+              style={{ color: "var(--text-display)" }}
+            >
+              {topCategory[0]}
+            </p>
+          </div>
+          <p
+            className="text-[16px] font-mono font-bold"
+            style={{ color: "var(--accent)" }}
+          >
+            {formatCurrency(topCategory[1])}
+          </p>
+        </div>
+      )}
+
+      {/* Charts */}
+      {filteredTransactions.length > 0 && (
+        <>
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: "var(--surface)" }}
+          >
+            <p
+              className="text-[13px] font-medium mb-3"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Kategori
+            </p>
+            <CategoryChart
+              transactions={filteredTransactions}
+              categories={categories}
+            />
+          </div>
+
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: "var(--surface)" }}
+          >
+            <WeeklyChart
+              transactions={filteredTransactions}
+              selectedMonth={selectedDate}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Savings Trend */}
+      <div className="p-4 rounded-xl" style={{ background: "var(--surface)" }}>
+        <p
+          className="text-[13px] font-medium mb-3"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          Tren Sisa Budget
+        </p>
+        <SavingsChart monthlyData={savingsData} />
+      </div>
       <BottomNav />
-    </div>
+    </main>
   );
 }
 

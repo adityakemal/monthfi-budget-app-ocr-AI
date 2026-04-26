@@ -1,11 +1,12 @@
 {
-  "/api/state/route": "/api/state",
-  "/api/transactions/route": "/api/transactions",
-  "/api/budget/route": "/api/budget",
-  "/api/categories/route": "/api/categories",
   "/api/transactions/[id]/route": "/api/transactions/[id]",
+  "/api/transactions/route": "/api/transactions",
+  "/api/categories/route": "/api/categories",
+  "/api/budget/route": "/api/budget",
   "/_not-found/page": "/_not-found",
-  "/login/page": "/login",
+  "/api/state/route": "/api/state",
+  "/settings/page": "/settings",
   "/page": "/",
+  "/login/page": "/login",
   "/transaction/page": "/transaction"
 }

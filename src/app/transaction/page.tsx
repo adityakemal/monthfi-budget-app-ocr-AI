@@ -8,6 +8,7 @@ import {
   MonthPicker,
   BottomNav,
   DataActions,
+  AppHeader,
 } from "@/components";
 import { useTheme } from "@/hooks/useTheme";
 import { useBudgetStore } from "@/store/budget";
@@ -56,126 +57,92 @@ export default function TransactionPage() {
   }
 
   return (
-    <div
-      className="min-h-screen pb-20"
-      style={{ background: "var(--black)", color: "var(--text-primary)" }}
-    >
-      <div className="max-w-4xl mx-auto px-4 py-5 space-y-4">
-        {/* Header */}
-        <header className="flex justify-between items-center">
-          <h1
-            className="font-display text-3xl font-bold"
-            style={{ color: "var(--text-display)" }}
+    <main className="flex-1 pb-20 px-4 py-5 space-y-4 text-[var(--text-primary)]">
+      {/* Header */}
+      <AppHeader
+        title="Transaksi"
+        selectedDate={selectedDate}
+        onMonthChange={setSelectedDate}
+      />
+
+      {/* Budget summary bar */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => setShowBudgetModal(true)}
+        className="w-full p-3 rounded-xl flex items-center justify-between"
+        style={{
+          background: "var(--surface)",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center text-[13px] font-bold"
+            style={{
+              background:
+                remaining < 0 ? "rgba(215,25,33,0.15)" : "rgba(74,158,92,0.15)",
+              color: remaining < 0 ? "var(--accent)" : "var(--success)",
+            }}
           >
-            Transaksi
-          </h1>
-          <div className="flex items-center gap-2">
-            <MonthPicker
-              selectedDate={selectedDate}
-              onChange={setSelectedDate}
-            />
-            <button
-              onClick={toggle}
-              className="w-9 h-9 flex items-center justify-center rounded-lg"
-              style={{
-                border: "1px solid var(--border-visible)",
-                color: "var(--text-secondary)",
-                background: "transparent",
-              }}
-            >
-              {darkMode ? "☀" : "☾"}
-            </button>
+            {progress > 100 ? "!" : `${Math.min(progress, 100).toFixed(0)}%`}
           </div>
-        </header>
-
-        {/* Budget summary bar */}
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => setShowBudgetModal(true)}
-          className="w-full p-3 rounded-xl flex items-center justify-between"
-          style={{
-            background: "var(--surface)",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center text-[13px] font-bold"
-              style={{
-                background:
-                  remaining < 0
-                    ? "rgba(215,25,33,0.15)"
-                    : "rgba(74,158,92,0.15)",
-                color: remaining < 0 ? "var(--accent)" : "var(--success)",
-              }}
-            >
-              {progress > 100 ? "!" : `${Math.min(progress, 100).toFixed(0)}%`}
-            </div>
-            <div className="text-left">
-              <p
-                className="text-[14px] font-semibold"
-                style={{ color: "var(--text-display)" }}
-              >
-                {formatCurrency(remaining)}
-              </p>
-              <p
-                className="text-[11px]"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                sisa dari {formatCurrency(budget)}
-              </p>
-            </div>
-          </div>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M11.7 3.3L12.7 4.3L5 12H4V11L11.7 3.3Z"
-              stroke="var(--text-secondary)"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-
-        {/* Transaction Form */}
-        <div
-          className="p-4 rounded-xl"
-          style={{ background: "var(--surface)" }}
-        >
-          <TransactionForm />
-        </div>
-
-        {/* Transaction List */}
-        <div
-          className="p-4 rounded-xl"
-          style={{ background: "var(--surface)" }}
-        >
-          <div className="flex justify-between items-center mb-3">
+          <div className="text-left">
             <p
-              className="text-[13px] font-medium"
+              className="text-[14px] font-semibold"
+              style={{ color: "var(--text-display)" }}
+            >
+              {formatCurrency(remaining)}
+            </p>
+            <p
+              className="text-[11px]"
               style={{ color: "var(--text-secondary)" }}
             >
-              Transaksi {dayjs(selectedDate).format("MMM YYYY")}
+              sisa dari {formatCurrency(budget)}
             </p>
-            <span
-              className="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold"
-              style={{
-                background: "var(--border)",
-                color: "var(--text-primary)",
-              }}
-            >
-              {filteredTransactions.length}
-            </span>
           </div>
-          <TransactionList transactions={filteredTransactions} />
         </div>
-
-        {/* Data Actions (Import/Export) */}
-        <DataActions />
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M11.7 3.3L12.7 4.3L5 12H4V11L11.7 3.3Z"
+            stroke="var(--text-secondary)"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </div>
 
+      {/* Transaction Form */}
+      <div className="p-4 rounded-xl" style={{ background: "var(--surface)" }}>
+        <TransactionForm />
+      </div>
+
+      {/* Transaction List */}
+      <div className="p-4 rounded-xl" style={{ background: "var(--surface)" }}>
+        <div className="flex justify-between items-center mb-3">
+          <p
+            className="text-[13px] font-medium"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Transaksi {dayjs(selectedDate).format("MMM YYYY")}
+          </p>
+          <span
+            className="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold"
+            style={{
+              background: "var(--border)",
+              color: "var(--text-primary)",
+            }}
+          >
+            {filteredTransactions.length}
+          </span>
+        </div>
+        <TransactionList transactions={filteredTransactions} />
+      </div>
+
+      {/* Data Actions (Import/Export) */}
+      <DataActions />
       {showBudgetModal && (
         <BudgetModal
           monthKey={monthKey}
@@ -184,7 +151,7 @@ export default function TransactionPage() {
       )}
 
       <BottomNav />
-    </div>
+    </main>
   );
 }
 

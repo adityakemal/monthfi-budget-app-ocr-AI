@@ -48,6 +48,12 @@
       "namedRegex": "^/login(?:/)?$"
     },
     {
+      "page": "/settings",
+      "regex": "^/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings(?:/)?$"
+    },
+    {
       "page": "/transaction",
       "regex": "^/transaction(?:/)?$",
       "routeKeys": {},

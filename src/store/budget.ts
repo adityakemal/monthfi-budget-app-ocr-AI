@@ -155,6 +155,6 @@ export const useBudgetStore = create<BudgetState>()(
         fetch(`/api/categories?name=${encodeURIComponent(category)}`, { method: 'DELETE' });
       },
     }),
-    { name: 'monthfi-store' }
+    { name: 'sesaku-store' }
   )
 );
