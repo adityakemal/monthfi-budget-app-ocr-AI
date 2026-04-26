@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Space_Mono, Doto } from "next/font/google";
 import { StoreInit } from "@/components";
 import "./globals.css";
@@ -29,6 +29,11 @@ export const metadata: Metadata = {
   description: "Kelola pengeluaran bulanan dengan mudah",
 };
 
+export const viewport: Viewport = {
+  themeColor: "currentColor",
+  width: "device-width, user-scalable=no",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +41,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${doto.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}>
+      <body
+        suppressHydrationWarning
+        className={`${doto.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}
+      >
         <StoreInit />
         {children}
       </body>
