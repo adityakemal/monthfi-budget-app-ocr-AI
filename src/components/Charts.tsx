@@ -273,6 +273,7 @@ export function SavingsChart({ monthlyData }: SavingsChartProps) {
               callbacks: {
                 label: (ctx) => {
                   const val = ctx.parsed.y;
+                  if (val === null || val === undefined) return '';
                   const prefix = val >= 0 ? '+' : '';
                   return `${prefix}${new Intl.NumberFormat('id-ID').format(val)}`;
                 },
