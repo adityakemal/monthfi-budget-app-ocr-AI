@@ -1,12 +1,12 @@
 {
   "/api/transactions/[id]/route": "/api/transactions/[id]",
   "/_not-found/page": "/_not-found",
-  "/api/transactions/route": "/api/transactions",
-  "/api/budget/route": "/api/budget",
   "/api/categories/route": "/api/categories",
+  "/api/budget/route": "/api/budget",
   "/api/state/route": "/api/state",
-  "/login/page": "/login",
+  "/api/transactions/route": "/api/transactions",
   "/page": "/",
+  "/login/page": "/login",
   "/transaction/page": "/transaction",
   "/settings/page": "/settings"
 }

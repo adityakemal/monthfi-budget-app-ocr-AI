@@ -130,14 +130,83 @@ export function DataActions() {
     ocrInputRef.current?.click();
   };
 
+  const compressImage = async (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+
+          // Batasi dimensi maksimal agar ukurannya turun drastis tapi teks tetap jelas untuk OCR
+          const MAX_DIMENSION = 1800;
+          if (width > height) {
+            if (width > MAX_DIMENSION) {
+              height = Math.round((height * MAX_DIMENSION) / width);
+              width = MAX_DIMENSION;
+            }
+          } else {
+            if (height > MAX_DIMENSION) {
+              width = Math.round((width * MAX_DIMENSION) / height);
+              height = MAX_DIMENSION;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve(file); // fallback jika canvas gagal
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert ke format WebP dengan kualitas 80%
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const newFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                const compressedFile = new File([blob], newFileName, {
+                  type: "image/webp",
+                  lastModified: Date.now(),
+                });
+                
+                // Jika hasil kompresi ternyata lebih besar dari aslinya (jarang terjadi), gunakan asli
+                if (compressedFile.size > file.size) {
+                  resolve(file);
+                } else {
+                  resolve(compressedFile);
+                }
+              } else {
+                resolve(file);
+              }
+            },
+            "image/webp",
+            0.8
+          );
+        };
+        img.onerror = (error) => resolve(file); // fallback jika gagal load image
+      };
+      reader.onerror = (error) => resolve(file);
+    });
+  };
+
   const handleOcrChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
       setIsScanning(true);
+      
+      // Kompres gambar sebelum dikirim
+      const compressedFile = await compressImage(file);
+      
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", compressedFile);
 
       const result = await processReceipt(formData);
 
@@ -148,7 +217,6 @@ export function DataActions() {
 
       setOcrResult(result);
       setIsOcrModalOpen(true);
-
     } catch (error: any) {
       alert(`Error OCR: ${error.message}`);
     } finally {
@@ -159,18 +227,18 @@ export function DataActions() {
 
   const handleOcrSave = (savedTransactions: any[]) => {
     // Generate UUIDs and add to store
-    const toSave: Transaction[] = savedTransactions.map(tx => ({
+    const toSave: Transaction[] = savedTransactions.map((tx) => ({
       ...tx,
-      id: crypto.randomUUID()
+      id: crypto.randomUUID(),
     }));
-    
-    // We can use importData to bulk add, or addTransaction loop. 
+
+    // We can use importData to bulk add, or addTransaction loop.
     // Using importData as done in CSV import:
     if (toSave.length > 0) {
-      toSave.forEach(tx => addTransaction(tx as any));
+      toSave.forEach((tx) => addTransaction(tx as any));
       alert(`Berhasil menyimpan ${toSave.length} transaksi dari OCR!`);
     }
-    
+
     setIsOcrModalOpen(false);
     setOcrResult(null);
   };
@@ -243,18 +311,17 @@ export function DataActions() {
         <input
           type="file"
           accept="image/*"
-          capture="environment"
           ref={ocrInputRef}
           style={{ display: "none" }}
           onChange={handleOcrChange}
         />
       </div>
 
-      <OcrConfirmationModal 
-        isOpen={isOcrModalOpen} 
-        onClose={() => setIsOcrModalOpen(false)} 
-        ocrData={ocrResult} 
-        onSave={handleOcrSave} 
+      <OcrConfirmationModal
+        isOpen={isOcrModalOpen}
+        onClose={() => setIsOcrModalOpen(false)}
+        ocrData={ocrResult}
+        onSave={handleOcrSave}
       />
     </div>
   );
