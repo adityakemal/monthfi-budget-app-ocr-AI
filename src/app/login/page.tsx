@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { authenticateUser } from "@/app/action";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,26 +12,22 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if already logged in using cookie
-    const isAuth = document.cookie.includes("is_auth=true");
-    if (isAuth) {
-      router.push("/");
-    }
+    // Note: HttpOnly cookie cannot be read by document.cookie.
+    // If the user is at /login but already authenticated, middleware will redirect them.
   }, [router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Hardcoded credentials
-    if (email === "admin@cubybot.net" && password === "Eren123#") {
-      // Set cookie that expires in 7 days
-      document.cookie = "is_auth=true; path=/; max-age=" + 60 * 60 * 24 * 7;
+    const res = await authenticateUser(email, password);
+
+    if (res.success) {
       router.push("/");
-      router.refresh(); // Refresh to trigger middleware
+      router.refresh(); // Refresh to trigger middleware and update UI state
     } else {
-      setError("Email atau password salah.");
+      setError(res.error || "Email atau password salah.");
       setLoading(false);
     }
   };

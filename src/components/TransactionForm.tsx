@@ -226,7 +226,7 @@ export function TransactionForm() {
         {/* Date */}
         <DayPicker date={date} onChange={setDate} className="w-full " />
         {/* Category Dropdown */}
-        <div className="w-full" ref={dropdownRef}>
+        <div className="w-full relative" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -268,7 +268,7 @@ export function TransactionForm() {
                 boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
               }}
             >
-              <div style={{ maxHeight: "180px", overflowY: "auto" }}>
+              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
                 {categories.map((k) => (
                   <button
                     key={k}

@@ -200,10 +200,10 @@ export function TransactionList({ transactions }: TransactionListProps) {
                 </td>
                 <td className="p-3 text-right">
                   <span
-                    className="text-[13px] font-mono font-bold"
+                    className="text-[13px] font-mono font-bold whitespace-nowrap"
                     style={{ color: "var(--accent)" }}
                   >
-                    -{formatCurrency(t.nominal)}
+                    {formatCurrency(t.nominal)}
                   </span>
                 </td>
                 <td className="p-3 relative">

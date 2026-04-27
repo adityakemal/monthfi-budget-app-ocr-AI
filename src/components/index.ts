@@ -7,3 +7,5 @@ export { BottomNav } from './BottomNav';
 export { StoreInit } from './StoreInit';
 export { DataActions } from './DataActions';
 export { AppHeader } from './AppHeader';
+export { OcrConfirmationModal } from './OcrConfirmationModal';
+export { CategoryManager } from './CategoryManager';

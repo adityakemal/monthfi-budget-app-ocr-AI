@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const isAuth = request.cookies.get('is_auth')?.value === 'true';
+  const expectedToken = process.env.AUTH_SECRET_TOKEN || "token_rahasia_lokal_123";
+  const token = request.cookies.get('auth_token')?.value;
+  const isAuth = token === expectedToken;
+
   const { pathname } = request.nextUrl;
 
   // 1. If not authenticated and trying to access any page other than /login

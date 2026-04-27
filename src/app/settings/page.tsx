@@ -1,14 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { BottomNav, AppHeader } from "@/components";
+import { BottomNav, AppHeader, CategoryManager } from "@/components";
+import { logoutUser } from "@/app/action";
 
 export default function SettingsPage() {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Menghapus cookie is_auth
-    document.cookie = "is_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  const handleLogout = async () => {
+    // Menghapus HttpOnly cookie via Server Action
+    await logoutUser();
     // Gunakan window.location agar middleware Next.js mereset status secara penuh
     window.location.href = "/login";
   };
@@ -19,6 +20,14 @@ export default function SettingsPage() {
       <AppHeader title="Pengaturan" isShowDatepicker={false} />
 
       <div className="space-y-6 mt-6">
+        {/* Kategori Section */}
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-2">
+            Manajemen Kategori
+          </h2>
+          <CategoryManager />
+        </section>
+
         {/* Akun Section */}
         <section className="space-y-3">
           <h2 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider pl-2">
