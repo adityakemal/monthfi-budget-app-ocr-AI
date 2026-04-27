@@ -16,7 +16,7 @@ export async function authenticateUser(email: string, pass: string) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 hari
+      maxAge: 60 * 60 * 24 * 3, // 3 hari
     });
     return { success: true };
   }

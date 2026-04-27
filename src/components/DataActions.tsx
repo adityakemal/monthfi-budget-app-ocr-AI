@@ -131,19 +131,18 @@ export function DataActions() {
   };
 
   const compressImage = async (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event) => {
         const img = new Image();
         img.src = event.target?.result as string;
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
+        img.onload = async () => {
           let width = img.width;
           let height = img.height;
-
-          // Batasi dimensi maksimal agar ukurannya turun drastis tapi teks tetap jelas untuk OCR
+          let quality = 0.8;
           const MAX_DIMENSION = 1800;
+
           if (width > height) {
             if (width > MAX_DIMENSION) {
               height = Math.round((height * MAX_DIMENSION) / width);
@@ -156,42 +155,53 @@ export function DataActions() {
             }
           }
 
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          if (!ctx) {
-            resolve(file); // fallback jika canvas gagal
-            return;
-          }
-          ctx.drawImage(img, 0, 0, width, height);
+          const getBlob = (w: number, h: number, q: number): Promise<Blob | null> => {
+            return new Promise((res) => {
+              const canvas = document.createElement("canvas");
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext("2d");
+              if (!ctx) return res(null);
+              ctx.drawImage(img, 0, 0, w, h);
+              canvas.toBlob((blob) => res(blob), "image/webp", q);
+            });
+          };
 
-          // Convert ke format WebP dengan kualitas 80%
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const newFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
-                const compressedFile = new File([blob], newFileName, {
-                  type: "image/webp",
-                  lastModified: Date.now(),
-                });
-                
-                // Jika hasil kompresi ternyata lebih besar dari aslinya (jarang terjadi), gunakan asli
-                if (compressedFile.size > file.size) {
-                  resolve(file);
-                } else {
-                  resolve(compressedFile);
-                }
-              } else {
-                resolve(file);
-              }
-            },
-            "image/webp",
-            0.8
-          );
+          const MAX_FILE_SIZE = 480 * 1024; // 480 KB limit (under 500KB)
+          let currentBlob: Blob | null = null;
+          let attempts = 0;
+
+          while (attempts < 6) {
+            currentBlob = await getBlob(width, height, quality);
+            if (currentBlob && currentBlob.size <= MAX_FILE_SIZE) {
+              break;
+            }
+            // Jika masih lebih besar dari batas 500KB, kurangi dimensi dan kualitas
+            width = Math.round(width * 0.8);
+            height = Math.round(height * 0.8);
+            quality = Math.max(0.5, quality - 0.1);
+            attempts++;
+          }
+
+          if (currentBlob) {
+            const newFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+            const compressedFile = new File([currentBlob], newFileName, {
+              type: "image/webp",
+              lastModified: Date.now(),
+            });
+            
+            if (compressedFile.size > file.size && file.size <= MAX_FILE_SIZE) {
+              resolve(file);
+            } else {
+              resolve(compressedFile);
+            }
+          } else {
+            resolve(file);
+          }
         };
-        img.onerror = (error) => resolve(file); // fallback jika gagal load image
+        img.onerror = () => resolve(file);
       };
-      reader.onerror = (error) => resolve(file);
+      reader.onerror = () => resolve(file);
     });
   };
 
@@ -323,6 +333,18 @@ export function DataActions() {
         ocrData={ocrResult}
         onSave={handleOcrSave}
       />
+
+      {isScanning && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
+          <p className="text-white text-lg font-semibold animate-pulse">
+            Memproses Foto...
+          </p>
+          <p className="text-white/80 text-sm mt-2">
+            Mohon tunggu, AI sedang membaca data struk.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
