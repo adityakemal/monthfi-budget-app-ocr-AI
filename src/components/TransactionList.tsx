@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 import type { Transaction } from "@/types";
 import { formatCurrency } from "@/utils";
 import { useBudgetStore } from "@/store/budget";
@@ -150,7 +151,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
                       className="font-medium text-[11px]"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      {dayjs(t.date).format("DD/MM/YY")}
+                      {dayjs(t.date).format("DD MMM YY")}
+                      <br />
+                      {dayjs(t.date).format("HH:mm")}
                     </div>
                   </div>
                 </td>
@@ -286,6 +289,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
           onSave={(updates) => {
             updateTransaction(editingTx.id, updates);
             setEditingTx(null);
+            toast.success("Transaksi diperbarui");
           }}
           onClose={() => setEditingTx(null)}
         />
@@ -296,6 +300,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
           onConfirm={() => {
             deleteTransaction(deletingTx);
             setDeletingTx(null);
+            toast.success("Transaksi dihapus");
           }}
           onClose={() => setDeletingTx(null)}
         />

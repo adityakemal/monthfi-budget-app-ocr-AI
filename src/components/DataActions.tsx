@@ -80,6 +80,7 @@ export function DataActions() {
 
             let rowDate = new Date().toISOString();
             if (row.date) {
+              const now = new Date();
               const parts = row.date.split("/");
               if (parts.length === 3) {
                 // DD/MM/YYYY
@@ -87,11 +88,20 @@ export function DataActions() {
                   parseInt(parts[2]),
                   parseInt(parts[1]) - 1,
                   parseInt(parts[0]),
+                  now.getHours(),
+                  now.getMinutes(),
+                  now.getSeconds(),
                 );
                 if (!isNaN(d.getTime())) rowDate = d.toISOString();
               } else {
                 const d = new Date(row.date);
-                if (!isNaN(d.getTime())) rowDate = d.toISOString();
+                if (!isNaN(d.getTime())) {
+                  // If parsed date has no time (midnight), inject current time
+                  if (d.getHours() === 0 && d.getMinutes() === 0) {
+                    d.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+                  }
+                  rowDate = d.toISOString();
+                }
               }
             }
 

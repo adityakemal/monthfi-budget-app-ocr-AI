@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Space_Mono, Doto } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import { StoreInit } from "@/components";
 import "./globals.css";
 
@@ -46,6 +47,19 @@ export default function RootLayout({
         className={`${doto.variable} ${spaceGrotesk.variable} ${spaceMono.variable} bg-[var(--black)]`}
       >
         <StoreInit />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 2000,
+            style: {
+              background: "#1a1a1a",
+              color: "#fff",
+              fontSize: "13px",
+              borderRadius: "10px",
+              border: "1px solid rgba(255,255,255,0.1)",
+            },
+          }}
+        />
         <div className="max-w-4xl mx-auto min-h-screen relative flex flex-col bg-[var(--black)] shadow-2xl">
           {children}
         </div>

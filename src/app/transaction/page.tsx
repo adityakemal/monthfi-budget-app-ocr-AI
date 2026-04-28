@@ -19,6 +19,7 @@ export default function TransactionPage() {
   const { mounted, darkMode, toggle } = useTheme();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const { transactions, getBudgetForMonth } = useBudgetStore();
 
   const monthKey = toMonthKey(selectedDate);
@@ -114,11 +115,6 @@ export default function TransactionPage() {
         </svg>
       </div>
 
-      {/* Transaction Form */}
-      <div className="p-4 rounded-xl" style={{ background: "var(--surface)" }}>
-        <TransactionForm />
-      </div>
-
       {/* Transaction List */}
       <div className="p-4 rounded-xl" style={{ background: "var(--surface)" }}>
         <div className="flex justify-between items-center mb-3">
@@ -128,21 +124,45 @@ export default function TransactionPage() {
           >
             Transaksi {dayjs(selectedDate).format("MMM YYYY")}
           </p>
-          <span
-            className="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold"
-            style={{
-              background: "var(--border)",
-              color: "var(--text-primary)",
-            }}
-          >
-            {filteredTransactions.length}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold"
+              style={{
+                background: "var(--border)",
+                color: "var(--text-primary)",
+              }}
+            >
+              {filteredTransactions.length}
+            </span>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="h-8 px-3 text-[12px] font-bold rounded-lg flex items-center gap-1.5 transition-opacity hover:opacity-80"
+              style={{
+                background: "var(--accent)",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M6 2V10M2 6H10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              Tambah
+            </button>
+          </div>
         </div>
         <TransactionList transactions={filteredTransactions} />
       </div>
 
       {/* Data Actions (Import/Export) */}
       <DataActions />
+
+      {/* Add Transaction Modal */}
+      <TransactionForm
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
+
       {showBudgetModal && (
         <BudgetModal
           monthKey={monthKey}

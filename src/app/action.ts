@@ -7,7 +7,8 @@ export async function authenticateUser(email: string, pass: string) {
   // Ambil data dari env (jika tidak ada di env, pakai default agar local aman)
   const envEmail = process.env.APP_LOGIN_EMAIL || "admin@cubybot.net";
   const envPass = process.env.APP_LOGIN_PASSWORD || "Eren123#";
-  const secretToken = process.env.AUTH_SECRET_TOKEN || "token_rahasia_lokal_123";
+  const secretToken =
+    process.env.AUTH_SECRET_TOKEN || "token_rahasia_lokal_123";
 
   if (email === envEmail && pass === envPass) {
     const cookieStore = await cookies();
@@ -16,7 +17,7 @@ export async function authenticateUser(email: string, pass: string) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 3, // 3 hari
+      maxAge: 60 * 60 * 24 * 7, // 7 hari
     });
     return { success: true };
   }
@@ -32,10 +33,13 @@ export async function processReceipt(formData: FormData) {
   // --- SECURITY CHECK ---
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
-  const expectedToken = process.env.AUTH_SECRET_TOKEN || "token_rahasia_lokal_123";
+  const expectedToken =
+    process.env.AUTH_SECRET_TOKEN || "token_rahasia_lokal_123";
 
   if (token !== expectedToken) {
-    console.error("UNAUTHORIZED: Seseorang mencoba mengakses API melalui Server Action!");
+    console.error(
+      "UNAUTHORIZED: Seseorang mencoba mengakses API melalui Server Action!",
+    );
     return { error: "Akses ditolak! Anda belum login." };
   }
   // ----------------------
